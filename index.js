@@ -13,3 +13,6 @@ app.get("/salud", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+const webhookRoutes = require('./webhook');
+app.use(express.json());
+app.use('/webhook', webhookRoutes);
