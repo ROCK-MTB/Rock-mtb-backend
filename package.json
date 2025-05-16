@@ -1,12 +1,15 @@
 {
-  "name": "rock-mtb-backend",
+  "name": "rock-mtb-mercadopago",
   "version": "1.0.0",
-  "description": "Webhook para activar Premium con Mercado Pago",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mercadopago": "^1.5.14"
   }
 }
