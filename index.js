@@ -3,32 +3,21 @@ const mercadopago = require("mercadopago");
 require("dotenv").config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 
+// Configurar credenciales de Mercado Pago
 mercadopago.configure({
-  access_token: process.env.ACCESS_TOKEN
+  access_token: process.env.TOKEN_DE_ACCESO
 });
 
-// Ruta de verificación simple
+// Ruta de prueba
 app.get("/", (req, res) => {
-  res.send("¡Backend ROCK-MTB funcionando!");
+  res.send("Backend ROCK-MTB funcionando");
 });
 
-// Ruta webhook para Mercado Pago
-app.post("/webhook", (req, res) => {
-  console.log("Webhook recibido:", req.body);
-
-  const payment = req.body;
-
-  if (payment.action === "payment.created" || payment.action === "payment.updated") {
-    // Aquí podrías verificar el pago y actualizar estado del usuario
-    console.log("Pago recibido, procesar usuario Premium");
-  }
-
-  res.status(200).send("OK");
-});
-
-// NUEVA ruta para crear una preferencia de pago
+// Ruta para crear preferencia
 app.get("/crear-preferencia", async (req, res) => {
   const preference = {
     items: [
@@ -56,7 +45,17 @@ app.get("/crear-preferencia", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// Webhook para recibir notificaciones
+app.post("/webhook", (req, res) => {
+  const payment = req.body;
+  console.log("Webhook recibido:", payment);
+
+  // Aquí podés validar el pago y activar el usuario premium
+
+  res.sendStatus(200);
+});
+
+// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
