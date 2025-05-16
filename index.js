@@ -41,7 +41,6 @@ app.post('/crear-preferencia', async (req, res) => {
   }
 });
 
-// NUEVA RUTA para mostrar el botón de pago
 app.get('/pagar', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -72,5 +71,5 @@ app.get('/pagar', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(\`Servidor corriendo en puerto \${PORT}\`);
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
