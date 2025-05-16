@@ -1,12 +1,15 @@
-export default function (req, res) {
-  console.log('Webhook recibido:', req.body);
+const express = require('express');
+const router = express.Router();
 
-  // Simulación: activar usuario premium si el pago fue aprobado
-  if (req.body.action === 'payment.created' || req.body.action === 'payment.updated') {
-    const payment = req.body.data;
-    console.log('Procesar pago ID:', payment.id);
-    // Aquí iría tu lógica para marcar al usuario como Premium en tu base de datos
+router.post('/', (req, res) => {
+  const evento = req.body;
+
+  if (evento && evento.type === 'payment') {
+    console.log('Pago recibido:', evento.data);
+    // Acá podés activar usuario premium, guardar en la base de datos, etc.
   }
 
-  res.sendStatus(200);
-}
+  res.sendStatus(200); // Mercado Pago espera 200 OK
+});
+
+module.exports = router;
