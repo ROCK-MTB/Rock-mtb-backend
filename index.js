@@ -41,7 +41,36 @@ app.post('/crear-preferencia', async (req, res) => {
   }
 });
 
+// NUEVA RUTA para mostrar el botón de pago
+app.get('/pagar', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Suscripción ROCK-MTB</title>
+    </head>
+    <body>
+      <h1>Suscripción Premium - ROCK-MTB</h1>
+      <button onclick="iniciarPago()">Pagar con Mercado Pago</button>
+
+      <script>
+        async function iniciarPago() {
+          const res = await fetch('/crear-preferencia', { method: 'POST' });
+          const data = await res.json();
+          if (data.init_point) {
+            window.location.href = data.init_point;
+          } else {
+            alert("Error al generar link de pago.");
+          }
+        }
+      </script>
+    </body>
+    </html>
+  `);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
+  console.log(\`Servidor corriendo en puerto \${PORT}\`);
 });
