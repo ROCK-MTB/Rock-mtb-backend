@@ -1,48 +1,38 @@
-require('dotenv').config();
 const express = require('express');
-const mercadopago = require('mercadopago');
-const cors = require('cors');
-
+const dotenv = require('dotenv');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const puerto = process.env.PORT || 3000;
 
-app.use(cors());
+dotenv.config();
+
 app.use(express.json());
 
-mercadopago.configure({
-  access_token: process.env.ACCESS_TOKEN,
-});
-
 app.get('/', (req, res) => {
-  res.send('¡ROCK-MTB backend funcionando!');
+  res.send('¡Backend ROCK-MTB funcionando!');
 });
 
-app.post('/create_preference', async (req, res) => {
+app.get('/verificar-token', async (req, res) => {
+  const axios = require('axios');
   try {
-    const preference = {
-      items: [
-        {
-          title: 'Suscripción Premium ROCK-MTB',
-          unit_price: 1000,
-          quantity: 1,
-        },
-      ],
-      back_urls: {
-        success: 'https://rock-mtb-backend.onrender.com/success',
-        failure: 'https://rock-mtb-backend.onrender.com/failure',
-        pending: 'https://rock-mtb-backend.onrender.com/pending',
-      },
-      auto_return: 'approved',
-    };
-
-    const response = await mercadopago.preferences.create(preference);
-    res.json({ id: response.body.id });
+    const respuesta = await axios.get('https://api.mercadopago.com/users/me', {
+      headers: {
+        Authorization: `Bearer ${process.env.TOKEN_DE_ACCESO}`
+      }
+    });
+    res.json({
+      mensaje: 'Token válido',
+      datos: respuesta.data
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error al crear la preferencia');
+    res.status(400).json({
+      mensaje: 'Token inválido',
+      error: error.response?.data || error.message
+    });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
+app.post('/webhook', require('./webhook'));
+
+app.listen(puerto, () => {
+  console.log(`Servidor ROCK-MTB escuchando en puerto ${puerto}`);
 });
